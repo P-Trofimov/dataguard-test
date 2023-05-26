@@ -28,3 +28,11 @@ nav {
   }
 }
 </style>
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { MockApi } from "./clients/api";
+
+onMounted(() => {
+  MockApi.getTabs();
+});
+</script>

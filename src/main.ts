@@ -2,5 +2,8 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import { MockApi } from "./clients/api";
 
-createApp(App).use(store).use(router).mount("#app");
+MockApi.init().then(() => {
+  createApp(App).use(router).use(store).mount("#app");
+});
