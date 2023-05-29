@@ -12,23 +12,26 @@ const init = async () => {
 };
 
 const getTabs = async () => {
-  // in a real app, we would make an actual request
-  // here, we're just delaying LS interaction by 1 second
-  const tabs = await request(getLSNested, ["tabs"]);
-  console.log(tabs);
+  const tabs: string[] = await request(getLSNested, ["tabs"]);
+  const tabData = await Promise.all(tabs.map((tab) => getTabData(tab)));
+  return tabs.map((tab, index) => ({
+    id: tab,
+    title: tabData[index].title,
+    icon: tabData[index].icon,
+  }));
 };
 
 const getTabData = async (id: string) => {
   return request(getLSNested, ["tabdata", id]);
 };
 
-const getPlugins = async () => {
-  return request(getLSNested, ["plugins"]);
+const getPluginData = async (id: string) => {
+  return request(getLSNested, ["plugins", id]);
 };
 
 export const MockApi = {
   init,
   getTabs,
   getTabData,
-  getPlugins,
+  getPluginData,
 };

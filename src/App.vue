@@ -1,38 +1,40 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <div class="wrapper">
+    <SidebarSection :tabs="tabs" />
+    <main>
+      <router-view :key="$route.fullPath" />
+    </main>
+  </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { MockApi } from "./clients/api";
+import { Ref, onMounted, ref } from "vue";
+import { MockApi } from "@/clients/api";
+import SidebarSection from "@/components/SidebarSection.vue";
 
-onMounted(() => {
-  MockApi.getTabs();
+let tabs: Ref<{ id: string; title: string }[]> = ref([]);
+
+onMounted(async () => {
+  tabs.value = await MockApi.getTabs();
 });
 </script>
+
+<style lang="scss">
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+}
+</style>
+
+<style lang="scss" scoped>
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+</style>
