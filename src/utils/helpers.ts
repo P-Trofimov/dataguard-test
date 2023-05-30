@@ -4,7 +4,7 @@ export function sleep(ms: number) {
 
 export function getLS(path: string[]) {
   const json = localStorage.getItem(path[0]);
-  if (!json) throw new Error(`no ${path[0]}`);
+  if (json === null) throw new Error(`no ${path[0]}`);
 
   let result = JSON.parse(json);
   for (let i = 1; i < path.length; i++) {
@@ -24,6 +24,11 @@ const setNested = (obj: any, path: string[], value: any): any => {
 export function setLS(path: string[], value: any) {
   const jsonString = localStorage.getItem(path[0]);
   if (!jsonString) throw new Error(`no ${path[0]}`);
+
+  if (path.length === 1) {
+    localStorage.setItem(path[0], JSON.stringify(value));
+    return;
+  }
 
   const whole = JSON.parse(jsonString);
   const afterSet = setNested(whole, path.slice(1), value);

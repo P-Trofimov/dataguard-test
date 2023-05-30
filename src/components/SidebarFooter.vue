@@ -1,20 +1,35 @@
 <template>
   <p class="sidebar-footer" :class="{ disabled: !areAllEnabled }">
-    All plugins {{ verb }}
+    All plugins {{ pluginsStatus }}
     <ToggleSwitch
       :sidebar="true"
       :value="areAllEnabled"
-      @input="areAllEnabled = $event"
+      @input="setAllEnabled"
     />
   </p>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import ToggleSwitch from "@/components/ToggleSwitch.vue";
+import { getLS, request } from "@/utils/helpers";
+import { useStore } from "vuex";
 
 const areAllEnabled = ref(true);
-const verb = computed(() => (areAllEnabled.value ? "enabled" : "disabled"));
+const pluginsStatus = computed(() =>
+  areAllEnabled.value ? "enabled" : "disabled"
+);
+
+const store = useStore();
+
+const setAllEnabled = (value: boolean) => {
+  areAllEnabled.value = value;
+  store.dispatch("setEnabled", value);
+};
+
+onMounted(async () => {
+  areAllEnabled.value = await request(getLS, ["allEnabled"]);
+});
 </script>
 
 <style lang="scss" scoped>

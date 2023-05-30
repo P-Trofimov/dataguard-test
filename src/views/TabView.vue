@@ -8,7 +8,7 @@
         :title="plugin.title"
         :description="plugin.description"
         :active="plugin.active"
-        :disabled="plugin.disabled"
+        :disabled="plugin.disabled || !store.state.areAllPluginsEnabled"
         @toggle-active="toggleActive(plugin.id, $event)"
       />
     </div>
@@ -21,6 +21,9 @@ import { PluginData, PluginDataFull, TabData } from "@/types/tabs";
 import { Ref, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import PluginCard from "@/components/PluginCard.vue";
+import { useStore } from "vuex";
+
+const store = useStore();
 
 const router = useRouter();
 const tabData: Ref<TabData> = ref({

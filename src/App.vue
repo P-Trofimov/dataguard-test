@@ -11,11 +11,15 @@
 import { Ref, onMounted, ref } from "vue";
 import { MockApi } from "@/clients/api";
 import SidebarSection from "@/components/SidebarSection.vue";
+import { useStore } from "vuex";
 
-let tabs: Ref<{ id: string; title: string }[]> = ref([]);
+let tabs: Ref<{ id: string; title: string; icon: string }[]> = ref([]);
+const store = useStore();
 
 onMounted(async () => {
   tabs.value = await MockApi.getTabs();
+  const allEnabled = await MockApi.getAllEnabled();
+  store.commit("setEnabled", allEnabled);
 });
 </script>
 

@@ -11,9 +11,9 @@ const init = async () => {
     localStorage.setItem(key, JSON.stringify(json.data[key]));
   });
 
-  const allDisabled = localStorage.getItem("allDisabled");
-  if (allDisabled === null) {
-    localStorage.setItem("allDisabled", "false");
+  const allEnabled = localStorage.getItem("allEnabled");
+  if (allEnabled === null) {
+    localStorage.setItem("allEnabled", "true");
   }
 };
 
@@ -43,8 +43,12 @@ const setTabData = async (id: string, data: any) => {
   await request(setLS, ["tabdata", id], data);
 };
 
-const setAllDisabled = async (value: boolean) => {
-  await request(setLS, ["allDisabled"], value);
+const getAllEnabled = async () => {
+  return request(getLS, ["allEnabled"]);
+};
+
+const setAllEnabled = async (value: boolean) => {
+  await request(setLS, ["allEnabled"], value);
 };
 
 export const MockApi = {
@@ -53,5 +57,6 @@ export const MockApi = {
   getTabData,
   getPluginData,
   setTabData,
-  setAllDisabled,
+  setAllEnabled,
+  getAllEnabled,
 };
