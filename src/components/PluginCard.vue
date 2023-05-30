@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from "vue";
+import { defineProps, defineEmits } from "vue";
 import ToggleSwitch from "@/components/ToggleSwitch.vue";
 
 const props = defineProps({
@@ -31,8 +31,10 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["toggle-active"]);
+
 function toggleActive(event: any) {
-  console.log(event);
+  emit("toggle-active", event);
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="tab">
-    <h1>{{ tabData.title }} Plugins</h1>
+    <h1 v-show="tabData.title">{{ tabData.title }} Plugins</h1>
     <div class="cards">
       <PluginCard
         v-for="plugin in sortedPlugins"
@@ -9,6 +9,7 @@
         :description="plugin.description"
         :active="plugin.active"
         :disabled="plugin.disabled"
+        @toggle-active="toggleActive(plugin.id, $event)"
       />
     </div>
   </div>
@@ -33,6 +34,12 @@ const tabData: Ref<TabData> = ref({
 async function fetchTabData() {
   const tabId = router.currentRoute.value.params.tabId as string;
   return MockApi.getTabData(tabId);
+}
+
+async function refreshData() {
+  tabData.value = await fetchTabData();
+  const plugins = await fetchAndEnrichPlugins(tabData.value);
+  sortedPlugins.value = sortPlugins(plugins);
 }
 
 function sortPlugins(plugins: PluginDataFull[]): PluginDataFull[] {
@@ -87,13 +94,31 @@ function removeDuplicates(plugins: PluginDataFull[]): PluginDataFull[] {
   });
 }
 
+async function toggleActive(pluginId: string, event: any) {
+  const tab: TabData = tabData.value;
+
+  if (event) {
+    const index = tab.inactive.indexOf(pluginId);
+    tab.inactive.splice(index, 1);
+    tab.active.push(pluginId);
+  } else {
+    const index = tab.active.indexOf(pluginId);
+    tab.active.splice(index, 1);
+    tab.inactive.push(pluginId);
+  }
+
+  tabData.value = tab;
+
+  await MockApi.setTabData(
+    router.currentRoute.value.params.tabId as string,
+    tabData.value
+  );
+  refreshData();
+}
+
 const sortedPlugins: Ref<PluginDataFull[]> = ref([]);
 
-onMounted(async () => {
-  tabData.value = await fetchTabData();
-  const plugins = await fetchAndEnrichPlugins(tabData.value);
-  sortedPlugins.value = sortPlugins(plugins);
-});
+onMounted(refreshData);
 </script>
 
 <style lang="scss" scoped>
