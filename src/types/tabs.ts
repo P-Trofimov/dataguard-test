@@ -15,6 +15,7 @@ export type SidebarTab = {
 export type PluginData = {
   title: string;
   description: string;
+  id: string;
 };
 
 export type PluginDataFull = PluginData & {
