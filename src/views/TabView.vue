@@ -72,16 +72,12 @@ async function fetchAndEnrichPlugins(tabData: TabData) {
       ...plugin,
       active: true,
       disabled: false,
-    }))
-  );
-  result.push(
+    })),
     ...inactive.map((plugin) => ({
       ...plugin,
       active: false,
       disabled: false,
-    }))
-  );
-  result.push(
+    })),
     ...disabled.map((plugin) => ({
       ...plugin,
       active: false,
