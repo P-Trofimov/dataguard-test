@@ -13,7 +13,8 @@ export function getLS(path: string[]) {
   return result;
 }
 
-const setNested = (obj: any, path: string[], value: any): any => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const setNested = (obj: any, path: string[], value: unknown): any => {
   const [first, ...rest] = path;
   return {
     ...obj,
@@ -21,6 +22,7 @@ const setNested = (obj: any, path: string[], value: any): any => {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setLS(path: string[], value: any) {
   const jsonString = localStorage.getItem(path[0]);
   if (!jsonString) throw new Error(`no ${path[0]}`);
@@ -37,6 +39,7 @@ export function setLS(path: string[], value: any) {
 }
 
 export const request = async <
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   F extends (...args: any[]) => ReturnType<F> | Promise<ReturnType<F>>
 >(
   callback: F,
